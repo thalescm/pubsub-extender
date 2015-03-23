@@ -17,29 +17,62 @@ var express = require('express'),
     topic_GET_url = projetName + '/topics/' + (process.env.PROJECT_ID || 'cogent-chess-88921');
 
 
-
 var topic = pubsub.topic('my-new-topic');
 
 var subscription = topic.subscription('new-subscription');
 
+// Express setup
+app.listen(process.env.PORT || 3001);
+console.log('Server listening on port 3001');
+
+/* ************* PUSH SYSTEM ******************** */
 
 // Register listeners to start pulling for messages. (Push system);
-function onError(err) {
-  console.log('Subscriber:');
-  console.log('Error Message');
-  console.log(err);
-  console.log('\n');
-}
+// function onError(err) {
+//   console.log('Subscriber:');
+//   console.log('Error Message');
+//   console.log(err);
+//   console.log('\n');
+// }
+//
+// function onMessage(message) {
+//   console.log('Subscriber:');
+//   console.log('Received Message.');
+//   console.log(message);
+//   console.log('\n');
+// }
+//
+// subscription.on('error', onError);
+// subscription.on('message', onMessage);
 
-function onMessage(message) {
-  console.log('Subscriber:');
-  console.log('Received Message.');
-  console.log(message);
-  console.log('\n');
-}
+/* ************* END PUSH SYSTEM ******************** */
 
-subscription.on('error', onError);
-subscription.on('message', onMessage);
+/* ************* PULL SYSTEM ******************** */
+
+app.get('/', function(req, res) {
+
+  subscription.pull(function(err, messages) {
+    if(err) {
+
+        console.log('Subscriber:');
+        console.log('Error getting messages');
+        console.log(err);
+        console.log('\n');
+        res.send(500, err);
+    } else {
+
+        console.log('Subscriber:');
+        console.log('Received Messages.');
+        console.log(messages);
+        console.log('\n');
+        res.json(200, messages);
+    }
+  });
+
+});
+
+/* ************* END PULL SYSTEM ******************** */
+
 
 // // Subscribe to the topic.
 // topic.subscribe('new-subscription', function(err, subscription) {
