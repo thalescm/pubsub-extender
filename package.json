@@ -1,0 +1,18 @@
+{
+  "name": "google-pubsub-test",
+  "version": "0.0.0",
+  "description": "",
+  "main": "app.js",
+  "author": "Thales Machado",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "4.0.0",
+    "moment-timezone": "0.3.0",
+    "mongojs": "0.18.0",
+    "gcloud": "0.12.0"
+  },
+  "author": "",
+  "license": "MIT"
+}
