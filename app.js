@@ -124,7 +124,7 @@ var subscription = topic.subscription('new-subscription');
 
 app.get('/', function(req, res) {
 
-  subscription.pull(function(err, messages) {
+  subscription.pull({ maxResults : 10 }, function(err, messages) {
     if(err) {
 
         console.log('Subscriber:');
