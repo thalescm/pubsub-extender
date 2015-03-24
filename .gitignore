@@ -1,4 +1,6 @@
 .env
 keys
-node_modules
+node_modules/express
+node_modules/moment-timezone
+node_modules/mongojs
 *.DS_Store

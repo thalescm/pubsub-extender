@@ -10,8 +10,7 @@
   "dependencies": {
     "express": "4.0.0",
     "moment-timezone": "0.3.0",
-    "mongojs": "0.18.0",
-    "gcloud": "0.12.0"
+    "mongojs": "0.18.0"
   },
   "author": "",
   "license": "MIT"

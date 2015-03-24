@@ -124,22 +124,27 @@ var subscription = topic.subscription('new-subscription');
 
 app.get('/', function(req, res) {
 
-  subscription.pull({ maxResults : 10 }, function(err, messages) {
-    if(err) {
+  subscription.pull(
+    {
+      maxResults : 10,
+      returnImmediately : true
+    }, function(err, messages) {
+      
+      if(err) {
 
-        console.log('Subscriber:');
-        console.log('Error getting messages');
-        console.log(err);
-        console.log('\n');
-        res.send(500, err);
-    } else {
+          console.log('Subscriber:');
+          console.log('Error getting messages');
+          console.log(err);
+          console.log('\n');
+          res.send(500, err);
+      } else {
 
-        console.log('Subscriber:');
-        console.log('Received Messages.');
-        console.log(messages);
-        console.log('\n');
-        res.json(200, messages);
-    }
+          console.log('Subscriber:');
+          console.log('Received Messages.');
+          console.log(messages);
+          console.log('\n');
+          res.json(200, messages);
+      }
   });
 
 });
