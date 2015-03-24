@@ -126,10 +126,9 @@ app.get('/', function(req, res) {
 
   subscription.pull(
     {
-      maxResults : 10,
-      returnImmediately : true
+      maxResults : 10
     }, function(err, messages) {
-      
+
       if(err) {
 
           console.log('Subscriber:');
@@ -143,7 +142,27 @@ app.get('/', function(req, res) {
           console.log('Received Messages.');
           console.log(messages);
           console.log('\n');
-          res.json(200, messages);
+
+          if (messages.length > 0) {
+
+
+            var ackIds = messages.map(function(message) {
+              return message.ackId;
+            });
+
+            subscription.ack(ackIds, function(err) {
+
+              if (err) {
+                console.log('It was not possible to ack messages');
+                res.json(200, messages);
+              } else {
+                console.log('Successfuly acked messages');
+                res.json(200, messages);
+              }
+            });
+          }
+
+          res.json(404, 'No message Found');
       }
   });
 

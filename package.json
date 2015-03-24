@@ -1,5 +1,5 @@
 {
-  "name": "google-pubsub-test",
+  "name": "pubsub-extender",
   "version": "0.0.0",
   "description": "",
   "main": "app.js",
