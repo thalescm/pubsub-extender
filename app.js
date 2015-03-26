@@ -38,6 +38,24 @@ var express = require('express'),
 
 
 
+// pubsub.createTopic('my-new-topic', function(err, topic) {
+
+//   if (err) {
+//     console.log("Error: " + err);
+//   } else {
+//     console.log("Created my-new-topic!");
+//     topic.publish('New message!', function(err) {
+
+//       if (err) {
+//         console.log("Error: " + err);
+//       } else {
+//         console.log("New message sent!");
+//       }
+//     });
+
+//   }
+// });
+
 
 var topic = pubsub.topic('my-new-topic');
 
@@ -49,8 +67,22 @@ app.post('/', function(req, res) {
 
   var timestamp = moment().unix();
 
+  /*
+    though Pub/Sub usually delivers messages in order of publication,
+    this is not guaranteed; it is possible for subscriptions to receive
+    messages out of order. For this reason, we suggest that you include
+    sequence information in the message payload or attribute so that
+    subscribers that need in-order messaging can implement logic to do so.
+  */
   topic.publish({
-    timestamp: timestamp
+    data: {
+
+      timestamp: timestamp,
+      event: 'Test Publish'
+    },
+    attributes: {
+      order: "1"
+    }
   }, function(err) {
     if (err) {
       console.log('Publisher:');
@@ -87,46 +119,23 @@ app.post('/', function(req, res) {
 //
 //   })
 // };
-//
-// getTopic(null);
 
-// pubsub.getTopics(function(err, topics) {
 
-//   if(err){
-//     console.log('ERROR!');
-//     console.log(err);
-//   } else {
-//     console.log('Success!');
-//     console.log(topics);
-//     getTopic(topics[0].name);
-//   }
-// });
-
-// pubsub.createTopic('my-new-topic', function(err, topic) {
-
-//   if (err) {
-//     console.log("Error: " + err);
-//   } else {
-//     console.log("Created my-new-topic!");
-//     topic.publish('New message!', function(err) {
-
-//       if (err) {
-//         console.log("Error: " + err);
-//       } else {
-//         console.log("New message sent!");
-//       }
-//     });
-
-//   }
-// });
+// topic.subscribe('new-subscription', {
+//   ackDeadlineSeconds: 90,
+//   autoAck: true,
+//   interval: 30
+// }, function(err, subscription) {});
 
 var subscription = topic.subscription('new-subscription');
+
+// Please read https://cloud.google.com/pubsub/subscriber
 
 app.get('/', function(req, res) {
 
   subscription.pull(
     {
-      maxResults : 10
+      maxResults : 3
     }, function(err, messages) {
 
       if(err) {
@@ -146,6 +155,8 @@ app.get('/', function(req, res) {
           if (messages.length > 0) {
 
 
+            // UNCOMMENT LINES BELOW TO ENABLE AUTO ACK FUNCTIONALITY
+
             var ackIds = messages.map(function(message) {
               return message.ackId;
             });
@@ -160,9 +171,10 @@ app.get('/', function(req, res) {
                 res.json(200, messages);
               }
             });
-          }
+          } else {
 
-          res.json(404, 'No message Found');
+            res.json(404, 'No message Found');
+          }
       }
   });
 
