@@ -125,9 +125,24 @@ app.post('/', function(req, res) {
 //   ackDeadlineSeconds: 90,
 //   autoAck: true,
 //   interval: 30
-// }, function(err, subscription) {});
+// }, function(err, subscription) {
+//   if (err) {
+//     console.log(err);
+//   }
+// });
 
 var subscription = topic.subscription('new-subscription');
+
+
+// subscription.delete(function(err) {
+//   if (err) {
+//
+//     console.log('Fail to delete subscription');
+//   } else {
+//
+//     console.log('Subscription Deleted');
+//   }
+// });
 
 // Please read https://cloud.google.com/pubsub/subscriber
 

@@ -30,3 +30,9 @@ Well, whats really important is this:
 ###<strong>In my tests I couldn't make a single flow with all messages in order... Either sending or not sending the ACK...</strong>
 
 ## Batching
+
+Really simple to make. You can send an array of messages when publishing and stablish a max number of messages to pull (Although this is not consisting every time. I've got examples where I had more than one message to pull, the maxResults was set to 10 and received only one message).
+
+- "A publish request can be at most 10MB in size. Individual messages can be as large as the request size limit allows. A publish call can have at most 1,000 messages in a single request."
+
+- "* @param {number} options.maxResults - Limit the amount of messages pulled."
